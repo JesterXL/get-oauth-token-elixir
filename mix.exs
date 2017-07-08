@@ -4,7 +4,7 @@ defmodule EAPIOAUTH.Mixfile do
   def project do
     [app: :eapioauth,
      version: "0.1.0",
-     elixir: "~> 1.4",
+     elixir: "~> 1.4.5",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps()]
@@ -16,8 +16,7 @@ defmodule EAPIOAUTH.Mixfile do
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
     [
-      extra_applications: [:logger],
-      applications: [:httpotion]
+      extra_applications: [:logger]
     ]
   end
 
@@ -32,7 +31,8 @@ defmodule EAPIOAUTH.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:httpotion, "~> 3.0.2"}
+      {:httpoison, "~> 0.12"},
+      {:poison, "~> 3.1"}
     ]
   end
 end

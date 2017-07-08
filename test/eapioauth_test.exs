@@ -260,10 +260,38 @@ defmodule EAPIOAUTHTest do
   #   response = EAPIOAUTH.post()
   # end
 
-  test "post integration works" do
-    response = HTTPotion.get "https://5vgcr03zw4.execute-api.us-east-1.amazonaws.com/prod/pets"
-    IO.puts response
-    assert HTTPotion.Response.success?(response) == true
+  # test "post integration works" do
+  #   response = HTTPotion.get "https://5vgcr03zw4.execute-api.us-east-1.amazonaws.com/prod/pets", [ssl: [{:versions, [:'tlsv1.2']}]])
+  #   IO.inspect response
+  #   # assert HTTPotion.Response.success?(response) == true
+  # end
+
+  defmodule Pet do
+    @derive [Poison.Encoder]
+    defstruct [:id, :price, :type]
+  end
+
+  test "post poison works" do
+    HTTPoison.start
+    case HTTPoison.get "https://5vgcr03zw4.execute-api.us-east-1.amazonaws.com/prod/pets" do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        parsed = Poison.decode!(body, as: [%Pet{}]  )
+        IO.puts "parsed:"
+        IO.inspect parsed
+        assert hd(parsed).price == 249.99
+        _ -> flunk "failed to parse or assert receive JSON if any"
+    end
+  end
+
+  defmodule Person do
+    @derive [Poison.Encoder]
+    defstruct [:name, :age]
+  end
+
+  test "poison decode works" do
+    result = Poison.decode!(~s({"name": "Devin Torres", "age": 27}), as: %Person{})
+    IO.puts "result:"
+    IO.inspect result
   end
 
 end
